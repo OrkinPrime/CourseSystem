@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>注册学生账户</title>
+    <style>@import url(css/signin.css);</style>
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+
+</head>
+<body>
+<div id="wp">
+     <div id="bd">
+         <div id="main">
+             <form id="signInForm">
+                 <section id="signInForm-input">
+                     <ul>
+                         <li>
+                             <label>
+                                 登录名:
+                                 <input id="loginName" name="loginName" type="text">
+                             </label>
+                         </li>
+                         <li>
+                             <label>
+                                 密码:
+                                 <input id="password" name="password" type="password">
+                             </label>
+                         </li>
+                         <li>
+                             <label>
+                                 确认密码:
+                                 <input id="confirmPassword" name="confirm" type="password">
+                             </label>
+                         </li>
+                     </ul>
+                     <p id="message" style="color:#ff0000;"></p>
+                 </section>
+                 <section id="signIn-button">
+                     <input type="submit" id="submitBtn" class="signInButton" disabled value="注册">
+                     <input type="reset" id="resetBtn" class="signInButton" value="重置">
+                 </section>
+             </form>
+         </div>
+     </div>
+</div>
+</body>
+<script>
+    $(document).ready(function (e){
+        var passwordPattern = /^(?=.*\d)(?=.*[a-z])(?=.*[!@#$%^&*.])[a-z\d!@#$%^&*.]{6,}$/; // 密码格式正则表达式
+        /*
+        * ^：表示字符串的开始，确保正则表达式从输入字符串的开头进行匹配。
+        * (?=.*\d)：这是一个正向前瞻断言，它不消耗字符，只是检查当前位置后面是否有满足\d（任意数字）的字符存在。
+        * 这里的意思是在任意位置（由于.匹配任何字符，而*表示前面的元素可以重复0次或无限次）需要至少有一个数字。
+        * (?=.*[a-z])：同样是正向前瞻断言，检查字符串中是否存在至少一个小写字母[a-z]。
+        * (?=.*[!@#$%^&*])：再次使用正向前瞻断言，确保字符串中至少包含一个特殊字符!@#$%^&*。
+        * 这三个正向前瞻断言一起确保了密码中必须至少包含一个数字、一个小写字母和一个特殊字符。
+        * [a-z\d!@#$%^&*]{6,}：这部分定义了密码的主体部分，要求是至少6个字符长，这些字符可以是小写字母[a-z]、数字\d或者前面指定的特殊字符集合!@#$%^&*。
+        * $：表示字符串的结束，确保正则表达式匹配到字符串的末尾，即整个字符串都要满足前面的规则。
+        * */
+        $('#password, #confirmPassword').on('input', function() {
+            var password = $('#password').val();
+            var confirmPassword = $('#confirmPassword').val();
+            var isValid = password === confirmPassword && passwordPattern.test(password);
+            // 更新提示信息
+            if (isValid) {
+                $('#message').text('');
+                $('#submitBtn').prop('disabled', false); // 启用提交按钮
+            } else {
+                if (!passwordPattern.test(password)) {
+                    $('#message').text('密码必须至少6位，且同时包含数字、小写字母及特殊字符(!@#$%^&*.)');
+                } else if (password !== confirmPassword) {
+                    $('#message').text('密码和确认密码不一致');
+                }
+                $('#submitBtn').prop('disabled', true); // 禁用提交按钮
+            }
+        });
+
+        $('#signInForm').submit(function (e){
+            e.preventDefault();
+        });
+
+        $('#submitBtn').click(function (e){
+            var loginName = $('#loginName').val();
+            var password = $('#password').val();
+            var signInfo={
+              loginName: loginName,
+              password: password,
+              accountType:'STUDENT'
+            };
+            $.ajax({
+                url: "http://localhost:8080/api/v1/signin",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(signInfo),
+                success: function(response) {
+                    if (response.success) {
+                        alert(response.message); // 显示注册成功消息
+                        window.location.href = "/ch_final/src/main/resources/static/index.html"; // 跳转到登录页面
+                    } else {
+                        alert(response.message);
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error("Error:", textStatus, errorThrown);
+                    alert("注册过程中发生未知错误，请重试。");
+                }
+            });
+        });
+    });
+</script>
+</html>

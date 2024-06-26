@@ -1,0 +1,56 @@
+body{
+
+    font-size:20px ;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+#wp{
+    background: burlywood;
+    width: 100%;
+    height: 100%;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+}
+#bd{
+    margin: auto;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: beige;
+    width: 50%;
+}
+
+#main{
+    margin: auto;
+    padding: 10px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+#signInForm-input{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+#signInForm-input section{
+    display: flex;
+    flex-direction: row;
+}
+#message{
+    font-size: 15px;.
+}
+.signInButton{
+    margin: 10px;
+    width: 100px;
+}
+#signIn-button{
+    margin: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

@@ -13,11 +13,13 @@ public interface MainService {
     List<Account> getAllAccounts();
     //登录验证
     boolean verifyAccount(Account account);
-    //注册
+    //增加账户信息
     int addAccount(Account account);
+    //注册时验证登录名重复性
+    boolean isAccountNameExist(String accountName);
     //注销账号（需要将学生表里的学生信息删除）
     int deleteAccount(int accountId);
-    //更换密码（需要再Controller中验证旧密码）
+    //更换密码（需要在Controller中验证旧密码正确性）
     int updateAccountPassword(Account account);
 
     //对学生

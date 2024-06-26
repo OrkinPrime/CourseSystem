@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>登录界面</title>
+</head>
+<style>@import url(css/login.css);</style>
+<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<body>
+<div id="wp">
+    <header id="hd"><h1 id="title">学生选课系统</h1></header>
+    <div id="bd">
+        <div id="main">
+            <form id="loginForm">
+                <section id="loginForm-input">
+                    <label for="loginName">账号：
+                        <input id="loginName" type="text" name="loginName">
+                    </label>
+                    <label for="password">密码：
+                        <input id="password" type="password" name="password">
+                    </label>
+                </section>
+                <section id="loginForm-button">
+                    <input id="loginSub" class="loginButton" type="submit" value="登录">
+                    <input id="signinSub" class="loginButton" type="button" value="注册">
+                </section>
+            </form>
+        </div>
+    </div>
+    <footer id="ft"></footer>
+</div>
+<script>
+    $(document).ready(function() {
+        $('#loginForm').submit(function (e){
+            e.preventDefault(); // 阻止表单默认提交行为
+        });
+        // 登录
+        $('#loginSub').click(function (e){
+            var accInf = {
+                loginName: $('#loginName').val(),
+                password: $('#password').val()
+            };
+            //console.log(accInf);
+            //console.log("acc");
+
+            /***********
+             * 请补全API *
+             ************/
+            /*             $.ajax({
+                 url: 'http://localhost:8080/api/v1/login',
+                 type: 'POST',
+                 data: JSON.stringify(accInf), // 将数据转换为JSON格式发送
+                 contentType: 'application/json', // 设置contentType，因为发送的是json数据
+                 success: function (response){
+                     if(response.success){ // 假设API响应包含success字段
+                         alert("登录成功");
+                     } else {
+                         alert("登录失败，密码错误或账号不存在");
+                     }
+                 },
+                 error: function(){
+                     alert("请求出错");
+                 }
+             });*/
+        });
+
+        $('#signinSub').click(function (e){
+
+        });
+    });
+
+</script>
+</body>
+</html>

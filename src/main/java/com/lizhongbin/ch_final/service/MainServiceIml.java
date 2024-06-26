@@ -32,6 +32,8 @@ public class MainServiceIml implements MainService {
         return mainMapper.selectAllAccount();
     }
 
+
+
     @Override
     public boolean verifyAccount(Account account) {
         if (mainMapper.selectAccountByLoginName(account.getLoginName()) != null) {
@@ -40,7 +42,6 @@ public class MainServiceIml implements MainService {
         } else
             return false;
         //账户不存在
-
     }
 
     @Override
@@ -48,6 +49,17 @@ public class MainServiceIml implements MainService {
         //将前端传来的密码加密
         account.setPassword(passwordManager.hashPassword(account.getPassword()));
         return mainMapper.insertAccount(account);
+    }
+
+    @Override
+    public boolean isAccountNameExist(String accountName) {
+        if (mainMapper.isAccountNameExist(accountName)!=0){
+            return true;
+            //如果存在
+        }else {
+            return false;
+            //如果不存在
+        }
     }
 
     @Override

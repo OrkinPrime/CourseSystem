@@ -21,6 +21,9 @@ public interface MainMapper {
     //查账户是否存在
     @Select("select * from accountinfo where loginName = #{loginName}")
     Account selectAccountByLoginName(String loginName);
+
+    @Select("SELECT COUNT(*) FROM accountinfo WHERE loginName = #{loginName}")
+    Integer isAccountNameExist(String loginName);
 /*
     //根据账户信息查对应学生信息
     @Select("select * from accountinfo a join students s on s.accountId=a.id where accountType='STUDENT' and a.id=#{accountId}")
@@ -28,7 +31,7 @@ public interface MainMapper {
 */
 
     //增（注册时使用）
-    @Insert("insert into accountinfo(name,password,accountType) VALUES (#{name},#{password},#{accountType})")
+    @Insert("insert into accountinfo(loginName,password,accountType) VALUES (#{loginName},#{password},#{accountType})")
     int insertAccount(Account account);
     //删
     @Delete("delete from accountinfo where id=#{accountId}")
