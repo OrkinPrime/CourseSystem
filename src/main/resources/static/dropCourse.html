@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>退课页面</title>
+    <style>@import url(css/dropCourse.css);</style>
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+</head>
+<body>
+<header>
+    <div id="list">
+        <ul class="header-button-list">
+            <li><a id="findAllCourse" href="#" class="button">主页面</a></li>
+            <li><a id="addCourse" href="#" class="button">选课</a></li>
+            <li><a id="dropCourse" href="#" class="button">退课</a></li>
+            <li><a id="exitAccount" href="#" class="button">退出账户</a></li>
+        </ul>
+    </div>
+</header>
+<div class="parent">
+    <div class="title">
+        <h1>已选课程信息</h1>
+    </div>
+    <div class="child">
+        <table>
+            <thead>
+            <tr>
+                <th><input type="checkbox" id="selectAll">全选</th>
+                <th id="th_id">课程ID</th>
+                <th id="th_name">课程名称</th>
+                <th id="th_des">描述信息</th>
+                <th id="th_cap">课容量</th>
+            </tr>
+            </thead>
+            <tbody id="main-shower">
+            </tbody>
+        </table>
+    </div>
+    <div class="buttons">
+        <button id="submitBtn">提交退课信息</button>
+    </div>
+</div>
+<footer>
+
+</footer>
+
+</body>
+<script>
+    var stuId;
+
+    function findPickedCourse(){
+        console.log(stuId);
+        $.ajax({
+            url:`http://localhost:8080/api/v1/picked/${stuId}`,
+            type:'GET',
+            success: function showData(res) {
+                if(res!=null)
+                    show(res);
+                else
+                    alert("你还没有选课，请先去选课！")
+            },
+            error: function (xhr, status, error) {
+                console.error(error);
+            }
+
+        });
+    }
+
+    function submitSelect(selectedIds){
+
+        var courseInf={
+            stuId:stuId,
+            courseId:selectedIds
+        }
+        console.log(courseInf);
+        $.ajax({
+            url: 'http://localhost:8080/api/v1/drop',
+            type: 'DELETE',
+            data: JSON.stringify(courseInf), // 将数据转换为JSON格式发送
+            contentType: 'application/json', // 设置contentType，因为发送的是json数据
+            success: function(response) {
+                findPickedCourse();
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.error("Error:", textStatus, errorThrown);
+                alert("提交过程中发生未知错误，请重试。");
+            }
+        });
+    }
+
+    function show(res) {
+        var htmlContent = '';
+        res.forEach(function (item) {
+            // 在每行的开始添加一个包含复选框的单元格
+            htmlContent += '<tr class="item">';
+            htmlContent += '<td><input type="checkbox" class="courseCheckbox"></td>'; // 多选框添加在这里
+
+            // 接着是原有的课程信息
+            htmlContent +=
+                '<td>' + item['id'] + '</td>' +
+                '<td>' + item['courseName'] + '</td>' +
+                '<td>' + item['description'] + '</td>' +
+                '<td>' + item['capacity'] + '</td>';
+            htmlContent += '</tr>';
+        });
+        $('#main-shower').html(htmlContent);
+
+        // 初始化全选功能（如果需要的话）
+        initSelectAll();
+    }
+
+    function initSelectAll() {
+        // 假设您有一个全选的复选框，这里给出逻辑示意
+        $('#selectAll').on('change', function () {
+            $('.courseCheckbox').prop('checked', this.checked);
+        });
+
+        // 监听每个单独复选框的变化，以更新全选框的状态
+        $('.courseCheckbox').on('change', function () {
+            var allChecked = $('.courseCheckbox').length === $('.courseCheckbox:checked').length;
+            $('#selectAll').prop('checked', allChecked);
+        });
+    }
+
+    function getSelectedCourseIds() {
+        var selectedIds = [];
+        $('.courseCheckbox:checked').each(function () {
+            // 假设您的课程ID是在复选框所在行的下一个TD元素中，根据实际情况调整
+            var courseId = $(this).closest('tr').find('td:eq(1)').text(); // 1代表课程ID所在的列索引，根据实际情况调整
+            selectedIds.push(courseId);
+        });
+        return selectedIds;
+    }
+
+    $(document).ready(function () {
+        stuId = localStorage.getItem('stuId');
+        findPickedCourse();
+        //console.log(stuId);
+        if (stuId!=null){
+            $('#submitBtn').click(function () {
+                var selectedIds = getSelectedCourseIds();
+                console.log(selectedIds); // 打印选中的课程ID数组，实际应用中可进行进一步处理
+                submitSelect(selectedIds);
+            });
+            $('#addCourse').click(function (e){
+                window.location.href = "/ch_final/src/main/resources/static/addCourse.html";
+            });
+            $('#dropCourse').click(function (e){
+                window.location.href = "/ch_final/src/main/resources/static/dropCourse.html";
+            });
+            $('#findAllCourse').click(function (e){
+                window.location.href = "/ch_final/src/main/resources/static/main.html";
+            });
+            $('#exitAccount').click(function (e){
+                localStorage.clear();
+                window.location.href = "/ch_final/src/main/resources/static/index.html";
+            });
+        }else{
+            alert("学生信息验证失效，请重新登录或者联系管理员");
+            localStorage.clear();
+            window.location.href = "/ch_final/src/main/resources/static/index.html";
+        }
+
+    });
+</script>
+</html>

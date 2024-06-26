@@ -3,6 +3,7 @@ package com.lizhongbin.ch_final.service;
 import com.lizhongbin.ch_final.model.Course;
 import com.lizhongbin.ch_final.model.Account;
 import com.lizhongbin.ch_final.model.Student;
+import com.lizhongbin.ch_final.model.StudentCourses;
 
 import java.util.List;
 
@@ -22,12 +23,22 @@ public interface MainService {
     //更换密码（需要在Controller中验证旧密码正确性）
     int updateAccountPassword(Account account);
 
-    //对学生
-    List<Student> getAllStudents();
+    Account getAccountByName(String accountName);
 
+    List<Course> getCoursesByStuId(int stuId);
+    //对学生
+    Student getStudentByAccountId(int accountId);
+    List<Student> getAllStudents();
+    int addStudent(Student student);
     //对班级
     List<Course> getAllCourses();
     int addCourse(Course course);
     int deleteCourse(int id);
     int updateCourse(Course course);
+
+    //对学生班级表
+    //选课
+    int addStudentCourses(StudentCourses studentCourses);
+    void deleteStudentCourses(StudentCourses studentCourses);
+    int countPickedNumOfCourse(int courseId);
 }

@@ -1,19 +1,25 @@
-package com.lizhongbin.ch_final.response;
+package com.lizhongbin.ch_final.entity;
 
 public class Respon {
     private Boolean success;
     private String message;
-    private String token;
-    private long userId;
+    private int userId;
+    private int stuId;
     private String type;
 
-    // 构造方法、getters和setters省略...
+    public int getStuId() {
+        return stuId;
+    }
+
+    public void setStuId(int stuId) {
+        this.stuId = stuId;
+    }
 
     public long getUserId() {
         return userId;
     }
 
-    public void setUserId(long userId) {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
 
@@ -41,18 +47,17 @@ public class Respon {
         this.message = message;
     }
 
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    public Respon(Boolean success, String message, String token, long userId, String type) {
+    public Respon(Boolean success, String message, int userId, int stuId, String type) {
         this.success = success;
         this.message = message;
-        this.token = token;
+        this.userId = userId;
+        this.stuId = stuId;
+        this.type = type;
+    }
+
+    public Respon(Boolean success, String message, int userId, String type) {
+        this.success = success;
+        this.message = message;
         this.userId = userId;
         this.type = type;
     }

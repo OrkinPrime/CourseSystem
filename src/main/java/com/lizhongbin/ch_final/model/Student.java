@@ -9,6 +9,17 @@ public class Student {
     public Student() {
     }
 
+    public Student(long stuNo, String stuName, int accountId) {
+        this.stuNo = stuNo;
+        this.stuName = stuName;
+        this.accountId = accountId;
+    }
+
+    public Student(long stuNo, String stuName) {
+        this.stuNo = stuNo;
+        this.stuName = stuName;
+    }
+
     public int getId() {
         return id;
     }

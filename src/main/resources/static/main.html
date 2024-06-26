@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>主页面</title>
+    <style>@import url(css/main.css);</style>
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+</head>
+<body>
+<header>
+    <div id="list">
+        <ul class="header-button-list">
+            <li><a id="findAllCourse" href="#" class="button">主页面</a></li>
+            <li><a id="addCourse" href="#" class="button">选课</a></li>
+            <li><a id="dropCourse" href="#" class="button">退课</a></li>
+            <li><a id="exitAccount" href="#" class="button">退出账户</a></li>
+        </ul>
+    </div>
+</header>
+<div class="parent">
+    <h1>所有课程信息</h1>
+    <div class="child">
+        <table>
+            <thead>
+            <tr>
+                <th id="th_id">课程ID</th>
+                <th id="th_name">课程名称</th>
+                <th id="th_des">描述信息</th>
+                <th id="th_cap">课容量</th>
+            </tr>
+            </thead>
+            <tbody id="main-shower">
+            </tbody>
+        </table>
+    </div>
+</div>
+<footer>
+
+</footer>
+</body>
+<script>
+    var userId;
+    function findAllCourse(){
+        $.ajax({
+            url: 'http://localhost:8080/api/v1/test/course',
+            type: 'get',
+            dataType: 'json',
+            success: function showData(res) {
+                show(res);
+            }
+        });
+    }
+
+    function show(res) {
+        var htmlContent = '';
+        res.forEach(function (item) {
+            htmlContent += '<tr class="item">';
+            htmlContent +=
+                '<td>' + item['id'] + '</td>' +
+                '<td>' + item['courseName'] + '</td>' +
+                '<td>' + item['description'] + '</td>' +
+                '<td>' + item['capacity'] + '</td>';
+            htmlContent += '</tr>';
+        });
+        $('#main-shower').html(htmlContent);
+    }
+
+    $(document).ready(function () {
+        userId = localStorage.getItem('userId');
+        if (userId!=null){
+            findAllCourse();
+            $('#addCourse').click(function (e){
+                window.location.href = "/ch_final/src/main/resources/static/addCourse.html";
+            });
+            $('#dropCourse').click(function (e){
+                window.location.href = "/ch_final/src/main/resources/static/dropCourse.html";
+            });
+            $('#findAllCourse').click(function (e){
+                window.location.href = "/ch_final/src/main/resources/static/main.html";
+            });
+            $('#exitAccount').click(function (e){
+                localStorage.clear();
+                window.location.href = "/ch_final/src/main/resources/static/index.html";
+            });
+        }else{
+            alert("学生信息验证失效，请重新登录或者联系管理员")
+            localStorage.clear();
+            window.location.href = "/ch_final/src/main/resources/static/index.html";
+        }
+
+    });
+</script>
+</html>

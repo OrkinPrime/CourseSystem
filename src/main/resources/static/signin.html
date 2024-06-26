@@ -5,47 +5,61 @@
     <title>注册学生账户</title>
     <style>@import url(css/signin.css);</style>
     <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
-
 </head>
 <body>
 <div id="wp">
-     <div id="bd">
-         <div id="main">
-             <form id="signInForm">
-                 <section id="signInForm-input">
-                     <ul>
-                         <li>
-                             <label>
-                                 登录名:
-                                 <input id="loginName" name="loginName" type="text">
-                             </label>
-                         </li>
-                         <li>
-                             <label>
-                                 密码:
-                                 <input id="password" name="password" type="password">
-                             </label>
-                         </li>
-                         <li>
-                             <label>
-                                 确认密码:
-                                 <input id="confirmPassword" name="confirm" type="password">
-                             </label>
-                         </li>
-                     </ul>
-                     <p id="message" style="color:#ff0000;"></p>
-                 </section>
-                 <section id="signIn-button">
-                     <input type="submit" id="submitBtn" class="signInButton" disabled value="注册">
-                     <input type="reset" id="resetBtn" class="signInButton" value="重置">
-                 </section>
-             </form>
-         </div>
-     </div>
+    <div id="bd">
+        <div id="main">
+            <form id="signInForm">
+                <section id="signInForm-input">
+                    <ul>
+                        <li>
+                            <label>
+                                登录名:
+                                <input id="loginName" name="loginName" type="text">
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                密码:
+                                <input id="password" name="password" type="password">
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                确认密码:
+                                <input id="confirmPassword" name="confirm" type="password">
+                            </label>
+                        </li>
+                    </ul>
+                    <p id="message" style="color:#ff0000;"></p>
+                    <ul>
+                        学生信息
+                        <li>
+                            <label>
+                                学号：
+                                <input id="stuNo" name="stuNo" type="text">
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                姓名：
+                                <input id="stuName" name="stuName" type="text">
+                            </label>
+                        </li>
+                    </ul>
+                </section>
+                <section id="signIn-button">
+                    <input type="submit" id="submitBtn" class="signInButton" disabled value="注册">
+                    <input type="reset" id="resetBtn" class="signInButton" value="重置">
+                </section>
+            </form>
+        </div>
+    </div>
 </div>
 </body>
 <script>
-    $(document).ready(function (e){
+    $(document).ready(function (e) {
         var passwordPattern = /^(?=.*\d)(?=.*[a-z])(?=.*[!@#$%^&*.])[a-z\d!@#$%^&*.]{6,}$/; // 密码格式正则表达式
         /*
         * ^：表示字符串的开始，确保正则表达式从输入字符串的开头进行匹配。
@@ -57,7 +71,7 @@
         * [a-z\d!@#$%^&*]{6,}：这部分定义了密码的主体部分，要求是至少6个字符长，这些字符可以是小写字母[a-z]、数字\d或者前面指定的特殊字符集合!@#$%^&*。
         * $：表示字符串的结束，确保正则表达式匹配到字符串的末尾，即整个字符串都要满足前面的规则。
         * */
-        $('#password, #confirmPassword').on('input', function() {
+        $('#password, #confirmPassword').on('input', function () {
             var password = $('#password').val();
             var confirmPassword = $('#confirmPassword').val();
             var isValid = password === confirmPassword && passwordPattern.test(password);
@@ -75,24 +89,28 @@
             }
         });
 
-        $('#signInForm').submit(function (e){
+        $('#signInForm').submit(function (e) {
             e.preventDefault();
         });
 
-        $('#submitBtn').click(function (e){
+        $('#submitBtn').click(function (e) {
             var loginName = $('#loginName').val();
             var password = $('#password').val();
-            var signInfo={
-              loginName: loginName,
-              password: password,
-              accountType:'STUDENT'
+            var stuNo = $('#stuNo').val();
+            var stuName = $('#stuName').val();
+            var signInfo = {
+                loginName: loginName,
+                password: password,
+                accountType: 'STUDENT',
+                stuNo: stuNo,
+                stuName: stuName
             };
             $.ajax({
                 url: "http://localhost:8080/api/v1/signin",
                 type: "POST",
                 contentType: "application/json",
                 data: JSON.stringify(signInfo),
-                success: function(response) {
+                success: function (response) {
                     if (response.success) {
                         alert(response.message); // 显示注册成功消息
                         window.location.href = "/ch_final/src/main/resources/static/index.html"; // 跳转到登录页面
@@ -100,7 +118,7 @@
                         alert(response.message);
                     }
                 },
-                error: function(jqXHR, textStatus, errorThrown) {
+                error: function (jqXHR, textStatus, errorThrown) {
                     console.error("Error:", textStatus, errorThrown);
                     alert("注册过程中发生未知错误，请重试。");
                 }

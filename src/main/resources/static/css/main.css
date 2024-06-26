@@ -1,0 +1,110 @@
+
+body{
+    height: 800px;
+}
+
+header{
+    height: 15%;
+    background: #9ac0c5;
+}
+footer{
+    height: 15%;
+    background: #243336;
+}
+.parent {
+    background: #e3f4ff;
+    padding-top: 30px;
+    text-align: center;
+    margin: auto;
+    height: 70%;
+}
+.child {
+    padding: 15px;
+    font-size: 17px;
+    color: dodgerblue;
+    text-decoration: none;
+    font-size: 17px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    padding: inherit;
+}
+
+/* CSS样式 */
+#list{
+    padding: 15px;
+}
+
+.header-button-list {
+    list-style-type: none; /* 去除列表符号 */
+    padding: 0; /* 移除默认内外边距 */
+    display: flex; /* 设置为弹性布局，实现横向排列 */
+    justify-content: center; /* 水平居中对齐 */
+}
+.header-button-list li {
+    margin-right: 10px; /* 列表项之间的间距 */
+}
+.button {
+    appearance: auto; /* 让元素看起来像按钮 */
+    -webkit-appearance: button;
+    -moz-appearance: button;
+    background-color: #4CAF50; /* 绿色背景 */
+    border: none; /* 无边框 */
+    color: white; /* 文字颜色为白色 */
+    padding: 10px 20px; /* 内边距 */
+    text-align: center; /* 文字居中 */
+    text-decoration: none; /* 去除下划线 */
+    display: inline-block; /* 设置为内联块状元素 */
+    font-size: 16px; /* 字体大小 */
+    cursor: pointer; /* 鼠标悬停时变为手型 */
+}
+.button:hover {
+    background-color: #45a049; /* 鼠标悬停时改变背景色 */
+}
+
+
+table {
+    border-collapse: collapse;
+    border-radius: 12px;
+    margin: auto;
+    width: 60%;
+    box-shadow: 1px 3px 10px 8px darkgray;
+    table-layout:fixed ;
+}
+
+table tr:last-child td:first-child {
+    border-bottom-left-radius: 12px;
+    border-bottom: none;
+    border-left: none;
+}
+
+table tr:last-child td:last-child {
+    border-bottom-right-radius: 12px;
+    border-bottom: none;
+    border-right: none;
+}
+
+table tr:first-child th:first-child {
+    border-top-left-radius: 12px;
+    border-left: none;
+    border-top: none;
+}
+
+table tr:first-child th:last-child {
+    border-top-right-radius: 12px;
+    border-top: none;
+    border-right: none;
+}
+
+th, td {
+    text-align: center;
+    padding: 5px;
+}
+
+tr:nth-child(even) {
+    background-color: #eae8e8;
+}
+
+tr:hover {
+    background-color: lightgray;
+}

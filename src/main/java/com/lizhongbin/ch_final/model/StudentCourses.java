@@ -2,8 +2,16 @@ package com.lizhongbin.ch_final.model;
 
 public class StudentCourses {
     private int id;
-    private int student_id;
-    private int course_id;
+    private int stuId;
+    private int courseId;
+
+    public StudentCourses() {
+    }
+
+    public StudentCourses(int stuId, int courseId) {
+        this.stuId = stuId;
+        this.courseId = courseId;
+    }
 
     public int getId() {
         return id;
@@ -13,19 +21,19 @@ public class StudentCourses {
         this.id = id;
     }
 
-    public int getStudent_id() {
-        return student_id;
+    public int getStuId() {
+        return stuId;
     }
 
-    public void setStudent_id(int student_id) {
-        this.student_id = student_id;
+    public void setStuId(int stuId) {
+        this.stuId = stuId;
     }
 
-    public int getCourse_id() {
-        return course_id;
+    public int getCourseId() {
+        return courseId;
     }
 
-    public void setCourse_id(int course_id) {
-        this.course_id = course_id;
+    public void setCourseId(int courseId) {
+        this.courseId = courseId;
     }
 }

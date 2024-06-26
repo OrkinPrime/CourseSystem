@@ -45,6 +45,8 @@ public interface MainMapper {
     //查全部
     @Select("select * from students")
     List<Student> selectAllStudent();
+    @Select("select * from students where accountId = #{accountId}")
+    Student selectStudentByAccountId(int accountId);
     //增
     @Insert("insert into students(stuNo,stuName,accountId) VALUES (#{stuNo},#{stuName},#{accountId})")
     int insertStudent(Student student);
@@ -65,7 +67,7 @@ public interface MainMapper {
     int updateStudent(Student student);
 
 
-    //对班级表
+    //对课程表
     //查全部
     @Select("select * from courses")
     List<Course> selectAllCourses();
@@ -89,17 +91,28 @@ public interface MainMapper {
     })
     int updateCourse(Course course);
 
-    //对学生班级中间表
+    @Select("SELECT c.id, c.courseName, c.description, c.capacity " +
+            "FROM courses c " +
+            "INNER JOIN student_courses sc ON c.id = sc.courseId " +
+            "WHERE sc.stuId = #{stuId}")
+    List<Course> getCoursesByStuId(int stuId);
+
+    //对学生课程中间表
     //查全部
     @Select("select * from student_courses")
     List<StudentCourses> selectAllStudentCourses();
     //根据学生ID，查学生的选课情况
-    @Select("select * from student_courses when webdb4.student_courses.student_id=#{studentId}")
-    List<StudentCourses> selectSCByStudentId(int studentId);
+    @Select("select * from student_courses when webdb4.student_courses.stuId=#{stuId}")
+    List<StudentCourses> selectSCByStudentId(int stuId);
     //根据课程ID，查课程的参与情况
-    @Select("select * from student_courses when webdb4.student_courses.course_id=#{courseId}")
+    @Select("select * from student_courses when webdb4.student_courses.courseId=#{courseId}")
     List<StudentCourses> selectSCByCourseId(int courseId);
     //学生选课
-    @Insert("insert into student_courses (student_id, course_id) values (#{student_id},#{course_id})")
+    @Insert("insert into student_courses (stuId, courseId) values (#{stuId},#{courseId})")
     int insertStudentCourses(StudentCourses studentCourses);
+    @Delete("DELETE FROM student_courses WHERE stuId = #{stuId} AND courseId = #{courseId}")
+    void deleteStudentCourseByStuIdAndCourseId(StudentCourses studentCourses);
+
+    @Select("select COUNT(*) from student_courses where courseId = #{courseId}")
+    int countPickedNumOfCourse(int courseId);
 }

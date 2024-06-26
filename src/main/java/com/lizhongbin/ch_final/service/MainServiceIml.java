@@ -4,6 +4,7 @@ import com.lizhongbin.ch_final.mapper.MainMapper;
 import com.lizhongbin.ch_final.model.Course;
 import com.lizhongbin.ch_final.model.Account;
 import com.lizhongbin.ch_final.model.Student;
+import com.lizhongbin.ch_final.model.StudentCourses;
 import com.lizhongbin.ch_final.security.PasswordManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,11 @@ public class MainServiceIml implements MainService {
     @Override
     public List<Student> getAllStudents() {
         return mainMapper.selectAllStudent();
+    }
+
+    @Override
+    public int addStudent(Student student) {
+        return mainMapper.insertStudent(student);
     }
 
     @Override
@@ -75,6 +81,21 @@ public class MainServiceIml implements MainService {
     }
 
     @Override
+    public Account getAccountByName(String accountName) {
+        return mainMapper.selectAccountByLoginName(accountName);
+    }
+
+    @Override
+    public List<Course> getCoursesByStuId(int stuId) {
+        return mainMapper.getCoursesByStuId(stuId);
+    }
+
+    @Override
+    public Student getStudentByAccountId(int accountId) {
+        return mainMapper.selectStudentByAccountId(accountId);
+    }
+
+    @Override
     public List<Course> getAllCourses() {
 
         return mainMapper.selectAllCourses();
@@ -93,5 +114,20 @@ public class MainServiceIml implements MainService {
     @Override
     public int updateCourse(Course course) {
         return 0;
+    }
+
+    @Override
+    public int addStudentCourses(StudentCourses studentCourses) {
+        return mainMapper.insertStudentCourses(studentCourses);
+    }
+
+    @Override
+    public void deleteStudentCourses(StudentCourses studentCourses) {
+        mainMapper.deleteStudentCourseByStuIdAndCourseId(studentCourses);
+    }
+
+    @Override
+    public int countPickedNumOfCourse(int courseId) {
+        return mainMapper.countPickedNumOfCourse(courseId);
     }
 }

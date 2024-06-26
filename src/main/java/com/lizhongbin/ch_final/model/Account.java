@@ -1,7 +1,7 @@
 package com.lizhongbin.ch_final.model;
 
 public class Account {
-    private enum AccountType {
+    enum AccountType {
         STUDENT,
         ADMIN,
         TEACHER
