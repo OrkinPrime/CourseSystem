@@ -190,7 +190,7 @@
     });
 
     $(document).ready(function () {
-        userId = localStorage.getItem('userId');
+       var userId = localStorage.getItem('userId');
         if (userId != null) {
             findAllCourse();
             $('#addCourse').click(function () {

@@ -9,39 +9,34 @@ import java.util.List;
 
 public interface MainService {
 
-    //对账户
-    //查全部
-    List<Account> getAllAccounts();
-    //登录验证
+    //账户信息验证
     boolean verifyAccount(Account account);
     //增加账户信息
     int addAccount(Account account);
     //注册时验证登录名重复性
     boolean isAccountNameExist(String accountName);
-    //注销账号（需要将学生表里的学生信息删除）
-    int deleteAccount(int accountId);
-    //更换密码（需要在Controller中验证旧密码正确性）
-    int updateAccountPassword(Account account);
-
+    //通过登录名获取账户信息
     Account getAccountByName(String accountName);
-
+    //通过学生id查询选课情况
     List<Course> getCoursesByStuId(int stuId);
-    //对学生
+    //通过账户id获取对应学生信息
     Student getStudentByAccountId(int accountId);
-    List<Student> getAllStudents();
+    //增加学生信息
     int addStudent(Student student);
-    //对班级
+    //获取全部课程信息
     List<Course> getAllCourses();
+    //增加课程信息
     int addCourse(Course course);
+    //删除中间信息
     int deleteCourse(int id);
-
-    //对学生班级表
-    //选课
+    //增加选课记录
     int addStudentCourses(StudentCourses studentCourses);
+    //删除选课记录
     boolean deleteStudentCourses(StudentCourses studentCourses);
-    int countPickedNumOfCourse(int courseId);
+    //通过学生id获取学生可选课情况
     List<Course> getUnPickedCoursesByStudentId(int studentId);
-
+    //通过课程id获取课程信息
     Course getCoursesById(int courseId);
+    //更新课程信息
     int updateCourse(Course course);
 }

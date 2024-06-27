@@ -23,21 +23,11 @@ public class MainServiceIml implements MainService {
         this.mainMapper = mainMapper;
     }
 
-    @Override
-    public List<Student> getAllStudents() {
-        return mainMapper.selectAllStudent();
-    }
 
     @Override
     public int addStudent(Student student) {
         return mainMapper.insertStudent(student);
     }
-
-    @Override
-    public List<Account> getAllAccounts() {
-        return mainMapper.selectAllAccount();
-    }
-
 
 
     @Override
@@ -65,18 +55,6 @@ public class MainServiceIml implements MainService {
         else
             return false;
             //如果不存在
-    }
-
-    @Override
-    public int deleteAccount(int accountId) {
-        return mainMapper.deleteAccountById(accountId);
-    }
-
-    @Override
-    public int updateAccountPassword(Account account) {
-        //将前端传来的密码加密
-        account.setPassword(passwordManager.hashPassword(account.getPassword()));
-        return mainMapper.updateAccountPassword(account);
     }
 
     @Override
@@ -121,11 +99,6 @@ public class MainServiceIml implements MainService {
             return true;
         else
             return false;
-    }
-
-    @Override
-    public int countPickedNumOfCourse(int courseId) {
-        return mainMapper.countPickedNumOfCourse(courseId);
     }
 
     @Override

@@ -92,7 +92,7 @@
         res.forEach(function (item) {
             // 在每行的开始添加一个包含复选框的单元格
             htmlContent += '<tr class="item">';
-            htmlContent += '<td><input type="checkbox" class="courseCheckbox"></td>'; // 多选框添加在这里
+            htmlContent += '<td><input type="checkbox" class="courseCheckbox"></td>';
 
             // 接着是原有的课程信息
             htmlContent +=
@@ -104,17 +104,14 @@
         });
         $('#main-shower').html(htmlContent);
 
-        // 初始化全选功能（如果需要的话）
         initSelectAll();
     }
 
     function initSelectAll() {
-        // 假设您有一个全选的复选框，这里给出逻辑示意
         $('#selectAll').on('change', function () {
             $('.courseCheckbox').prop('checked', this.checked);
         });
 
-        // 监听每个单独复选框的变化，以更新全选框的状态
         $('.courseCheckbox').on('change', function () {
             var allChecked = $('.courseCheckbox').length === $('.courseCheckbox:checked').length;
             $('#selectAll').prop('checked', allChecked);
@@ -124,8 +121,7 @@
     function getSelectedCourseIds() {
         var selectedIds = [];
         $('.courseCheckbox:checked').each(function () {
-            // 假设您的课程ID是在复选框所在行的下一个TD元素中，根据实际情况调整
-            var courseId = $(this).closest('tr').find('td:eq(1)').text(); // 1代表课程ID所在的列索引，根据实际情况调整
+            var courseId = $(this).closest('tr').find('td:eq(1)').text();
             selectedIds.push(courseId);
         });
         return selectedIds;
@@ -138,7 +134,6 @@
             findUnPickedCourse();
             $('#submitBtn').click(function () {
                 var selectedIds = getSelectedCourseIds();
-                console.log(selectedIds); // 打印选中的课程ID数组，实际应用中可进行进一步处理
                 submitSelect(selectedIds);
             });
             $('#addCourse').click(function (e){

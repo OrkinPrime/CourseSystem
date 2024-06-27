@@ -24,8 +24,8 @@ public class MainController {
         return mainService.getAllCourses();
     }
 
-    @PostMapping("api/v1/signin")
-    public ResponseEntity<Respon> signIn(@RequestBody Account_Student accountStudent) {
+    @PostMapping("api/v1/signup")
+    public ResponseEntity<Respon> signUp(@RequestBody Account_Student accountStudent) {
         Account account = new Account(accountStudent.getLoginName(), accountStudent.getPassword(), accountStudent.getAccountType());
 
         if (mainService.isAccountNameExist(accountStudent.getLoginName())) {
@@ -48,8 +48,8 @@ public class MainController {
         }
     }
 
-    @PostMapping("api/v1/login")
-    public ResponseEntity<Respon> login(@RequestBody Account account) {
+    @PostMapping("api/v1/signIn")
+    public ResponseEntity<Respon> signIn(@RequestBody Account account) {
         if (mainService.verifyAccount(account)) {
             account.setId(mainService.getAccountByName(account.getLoginName()).getId());
             String type = String.valueOf(mainService.getAccountByName(account.getLoginName()).getAccountType());
@@ -131,7 +131,7 @@ public class MainController {
         else
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Respon(false,"获取课程信息失败"));
     }
-    @PatchMapping("api/v1/admin/courses/{courseId}") // 假设按照课程ID更新，路径中添加了{courseId}
+    @PatchMapping("api/v1/admin/courses/{courseId}")
     public ResponseEntity<Respon> updateAdminCourse(@PathVariable int courseId, @RequestBody Course course) {
 
         Course pkg = new Course(courseId,course.getCourseName(), course.getDescription(), course.getCapacity());
@@ -150,7 +150,7 @@ public class MainController {
         if (mainService.deleteCourse(courseId)!=0) {
             return ResponseEntity.ok(new Respon(true, "删除成功"));
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Respon(false, "退课失败，删除失败"));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Respon(false, "退课失败"));
         }
     }
 
