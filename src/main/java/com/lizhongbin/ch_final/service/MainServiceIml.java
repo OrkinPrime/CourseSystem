@@ -108,7 +108,7 @@ public class MainServiceIml implements MainService {
 
     @Override
     public int deleteCourse(int id) {
-        return mainMapper.deleteAccountById(id);
+        return mainMapper.deleteCourseById(id);
     }
 
     @Override

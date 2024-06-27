@@ -132,14 +132,14 @@ public class MainController {
     }
 
     @PostMapping("api/v1/admin/courses")
-    public ResponseEntity<Respon> admin(@RequestBody Course course) {
+    public ResponseEntity<Respon> addCourse(@RequestBody Course course) {
         if (mainService.addCourse(course)!=0)
             return ResponseEntity.status(HttpStatus.CREATED).body(new Respon(true,"添加课程信息成功",course));
         else
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Respon(false, "添加课程信息失败"));
     }
     @GetMapping("api/v1/admin/courses/{courseId}")
-    public ResponseEntity<Respon> admin(@PathVariable int courseId) {
+    public ResponseEntity<Respon> getCourseById(@PathVariable int courseId) {
         if(mainService.getCoursesById(courseId)!=null)
             return ResponseEntity.ok(new Respon(true,"获取课程信息成功",mainService.getCoursesById(courseId)));
         else
@@ -160,6 +160,14 @@ public class MainController {
             // 如果更新失败，返回400 Bad Request或404 Not Found等适当状态码，以及错误信息
             Respon errorResponse = new Respon(false,"课程更新失败");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+        }
+    }
+    @DeleteMapping("api/v1/admin/courses/{courseId}")
+    public ResponseEntity<Respon> deleteCourseById(@PathVariable int courseId) {
+        if (mainService.deleteCourse(courseId)!=0) {
+            return ResponseEntity.ok(new Respon(true, "删除成功"));
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Respon(false, "退课失败，删除失败"));
         }
     }
 

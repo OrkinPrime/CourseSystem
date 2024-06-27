@@ -137,8 +137,6 @@
 
     $(document).on('click', '#changeById', function() {
             var courseId = $(this).data('id'); // 获取按钮对应课程的ID
-            console.log("test");
-            console.log(courseId);
             $.ajax({
                     url: `http://localhost:8080/api/v1/admin/courses/${courseId}`,
                     type: "get",
@@ -163,6 +161,22 @@
             );
             openChangeModal();
         });
+
+    $(document).on('click',"#deleteById",function (){
+        var courseId = $(this).data('id'); // 获取按钮对应课程的ID
+        $.ajax({
+                url: `http://localhost:8080/api/v1/admin/courses/${courseId}`,
+                method:"DELETE",
+                success: function (res) {
+                    console.log(res.message);
+                    findAllCourse();
+                },
+                error: function (xhr, status, error) {
+                    console.error(error);
+                }
+            }
+        );
+    });
 
     $(document).ready(function () {
         userId = localStorage.getItem('userId');

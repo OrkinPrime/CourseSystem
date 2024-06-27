@@ -84,7 +84,7 @@ public interface MainMapper {
     Course selectCourseById(int courseId);
 
     //删
-    @Delete("delete from courses where course.id=#{courseId}")
+    @Delete("delete from courses where courses.id=#{courseId}")
     int deleteCourseById(int courseId);
     //改
     @Update({
