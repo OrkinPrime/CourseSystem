@@ -4,7 +4,6 @@ import com.lizhongbin.ch_final.entity.CourseInfo;
 import com.lizhongbin.ch_final.model.*;
 import com.lizhongbin.ch_final.entity.Respon;
 import com.lizhongbin.ch_final.service.MainService;
-import org.apache.ibatis.annotations.Delete;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,24 +34,29 @@ public class MainController {
         return mainService.getAllAccounts();
     }
 
-    @PostMapping("api/v1/signin")
     //接收前端传来的账户信息，已经保证密码格式
     //先验证账户信息中登录名是否重复，如果重复，返回给前端的消息里包含error，和message提示登录名重复
     //如果不重复，则添加账户信息到数据库，返回消息包含success，和message提示注册成功，并且跳转到登录界面
+    @PostMapping("api/v1/signin")
     public ResponseEntity<Respon> signIn(@RequestBody Account_Student accountStudent) {
         Account account = new Account(accountStudent.getLoginName(), accountStudent.getPassword(), accountStudent.getAccountType());
+
         if (mainService.isAccountNameExist(accountStudent.getLoginName())) {
-            //如果存在此登录名
-            return new ResponseEntity<>(new Respon(false, "注册失败,登录名重复"), HttpStatus.OK);
+            // 登录名重复
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new Respon(false, "登录名重复"));
         } else {
             if (mainService.addAccount(account) != 0) {
                 Student student = new Student(accountStudent.getStuNo(), accountStudent.getStuName(), mainService.getAccountByName(accountStudent.getLoginName()).getId());
-                if (mainService.addStudent(student) != 0)
-                    return new ResponseEntity<>(new Respon(true, "注册成功"), HttpStatus.OK);
-                else
-                    return new ResponseEntity<>(new Respon(false, "注册失败,学生信息添加失败"), HttpStatus.OK);
+                if (mainService.addStudent(student) != 0) {
+                    // 注册成功
+                    return ResponseEntity.status(HttpStatus.CREATED).body(new Respon(true, "注册成功"));
+                } else {
+                    // 学生信息添加失败
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new Respon(false, "学生信息添加失败"));
+                }
             } else {
-                return new ResponseEntity<>(new Respon(false, "注册失败,账户信息添加失败"), HttpStatus.OK);
+                // 账户信息添加失败
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new Respon(false, "账户信息添加失败"));
             }
         }
     }
@@ -77,31 +81,53 @@ public class MainController {
         }
     }
 
+    @GetMapping("api/v1/pick/{stuId}")
+    public ResponseEntity<Respon> coursesCanBePick(@PathVariable int stuId) {
+        List<Course> courses = mainService.getUnPickedCoursesByStudentId(stuId);
+        return ResponseEntity.ok(new Respon(true, "查询成功", courses));
+    }
+
     @PostMapping("api/v1/pick")
     public ResponseEntity<Respon> pick(@RequestBody CourseInfo courseInfo) {
         int stuId = courseInfo.getStuId();
         int[] courseId = courseInfo.getCourseId();
-        for (int courseIds : courseId) {
-            StudentCourses studentCourses = new StudentCourses(stuId, courseIds);
+
+        boolean allSuccess = true;
+        for (int id : courseId) {
+            StudentCourses studentCourses = new StudentCourses(stuId, id);
             if (mainService.addStudentCourses(studentCourses) == 0) {
-                return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+                allSuccess = false;
             }
         }
-        return new ResponseEntity<>(new Respon(true, "选课成功"), HttpStatus.OK);
+
+        if (allSuccess) {
+            return ResponseEntity.ok(new Respon(true, "选课成功"));
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Respon(false, "选课失败，可能是课程已满或其他原因"));
+        }
     }
 
     @GetMapping("api/v1/picked/{stuId}")
-    public List<Course> picked(@PathVariable int stuId) {
-        return mainService.getCoursesByStuId(stuId);
+    public ResponseEntity<Respon> picked(@PathVariable int stuId) {
+        List<Course> courses = mainService.getCoursesByStuId(stuId);
+        return ResponseEntity.ok(new Respon(true, "查询成功", courses));
     }
 
     @DeleteMapping("api/v1/drop")
-    public void drop(@RequestBody CourseInfo courseInfo) {
+    public ResponseEntity<Respon> drop(@RequestBody CourseInfo courseInfo) {
         int stuId = courseInfo.getStuId();
         int[] courseId = courseInfo.getCourseId();
-        for (int courseIds : courseId) {
-            StudentCourses studentCourses = new StudentCourses(stuId, courseIds);
-            mainService.deleteStudentCourses(studentCourses);
+        boolean allSuccess = true;
+        for (int id : courseId) {
+            StudentCourses studentCourses = new StudentCourses(stuId, id);
+            if (!mainService.deleteStudentCourses(studentCourses)) {
+                allSuccess = false;
+            }
+        }
+        if (allSuccess) {
+            return ResponseEntity.ok(new Respon(true, "退课成功"));
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Respon(false, "退课失败，可能是课程未选或其他原因"));
         }
     }
 }

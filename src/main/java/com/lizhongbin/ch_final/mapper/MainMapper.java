@@ -71,6 +71,11 @@ public interface MainMapper {
     //查全部
     @Select("select * from courses")
     List<Course> selectAllCourses();
+
+    @Select("SELECT c.id, c.courseName, c.description, c.capacity " +
+            "FROM courses c " +
+            "WHERE NOT EXISTS (SELECT 1 FROM student_courses sc WHERE sc.stuId = #{stuId} AND sc.courseId = c.id)")
+    List<Course> selectUnPickedCourse(int stuId);
     //增
     @Insert("insert into courses(courseName,description,capacity) VALUES (#{courseName},#{description},#{capacity})")
     int insertCourse(Course course);
@@ -101,9 +106,6 @@ public interface MainMapper {
     //查全部
     @Select("select * from student_courses")
     List<StudentCourses> selectAllStudentCourses();
-    //根据学生ID，查学生的选课情况
-    @Select("select * from student_courses when webdb4.student_courses.stuId=#{stuId}")
-    List<StudentCourses> selectSCByStudentId(int stuId);
     //根据课程ID，查课程的参与情况
     @Select("select * from student_courses when webdb4.student_courses.courseId=#{courseId}")
     List<StudentCourses> selectSCByCourseId(int courseId);
@@ -111,7 +113,7 @@ public interface MainMapper {
     @Insert("insert into student_courses (stuId, courseId) values (#{stuId},#{courseId})")
     int insertStudentCourses(StudentCourses studentCourses);
     @Delete("DELETE FROM student_courses WHERE stuId = #{stuId} AND courseId = #{courseId}")
-    void deleteStudentCourseByStuIdAndCourseId(StudentCourses studentCourses);
+    int deleteStudentCourseByStuIdAndCourseId(StudentCourses studentCourses);
 
     @Select("select COUNT(*) from student_courses where courseId = #{courseId}")
     int countPickedNumOfCourse(int courseId);

@@ -39,6 +39,7 @@ public interface MainService {
     //对学生班级表
     //选课
     int addStudentCourses(StudentCourses studentCourses);
-    void deleteStudentCourses(StudentCourses studentCourses);
+    boolean deleteStudentCourses(StudentCourses studentCourses);
     int countPickedNumOfCourse(int courseId);
+    List<Course> getUnPickedCoursesByStudentId(int studentId);
 }

@@ -47,13 +47,13 @@
 </body>
 <script>
     var stuId;
-    function findAllCourse() {
+    function findUnPickedCourse() {
         $.ajax({
-            url: 'http://localhost:8080/api/v1/test/course',
+            url:`http://localhost:8080/api/v1/pick/${stuId}`,
             type: 'get',
             dataType: 'json',
             success: function showData(res) {
-                show(res);
+                show(res.courses);
             }
         });
     }
@@ -68,18 +68,21 @@
         $.ajax({
             url: 'http://localhost:8080/api/v1/pick',
             type: 'POST',
-            data: JSON.stringify(courseInf), // 将数据转换为JSON格式发送
-            contentType: 'application/json', // 设置contentType，因为发送的是json数据
+            data: JSON.stringify(courseInf),
+            contentType: 'application/json',
             success: function(response) {
                 if (response.success) {
-                    alert(response.message);
+                    alert(response.message || "选课成功");
+                    findUnPickedCourse();
                 } else {
-                    alert(response.message);
+                    alert(response.message || "选课失败，请检查所选课程或稍后再试。");
+                    findUnPickedCourse();
                 }
             },
             error: function(jqXHR, textStatus, errorThrown) {
                 console.error("Error:", textStatus, errorThrown);
-                alert("提交过程中发生未知错误，请重试。");
+                alert("选课过程中发生未知错误，请重试。");
+                findUnPickedCourse();
             }
         });
     }
@@ -132,7 +135,7 @@
 
         stuId = localStorage.getItem('stuId');
         if (stuId!=null){
-            findAllCourse();
+            findUnPickedCourse();
             $('#submitBtn').click(function () {
                 var selectedIds = getSelectedCourseIds();
                 console.log(selectedIds); // 打印选中的课程ID数组，实际应用中可进行进一步处理

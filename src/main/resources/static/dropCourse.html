@@ -51,18 +51,21 @@
     function findPickedCourse(){
         console.log(stuId);
         $.ajax({
-            url:`http://localhost:8080/api/v1/picked/${stuId}`,
-            type:'GET',
-            success: function showData(res) {
-                if(res!=null)
-                    show(res);
-                else
-                    alert("你还没有选课，请先去选课！")
+            url: `http://localhost:8080/api/v1/picked/${stuId}`,
+            type: 'GET',
+            success: function(data) {
+                console.log(data);
+                if (data.success && data.courses.length > 0) {
+                    show(data.courses);
+                } else {
+                    alert("你还没有选课，请先去选课！");
+                    window.location.href = "/ch_final/src/main/resources/static/addCourse.html";
+                }
             },
-            error: function (xhr, status, error) {
+            error: function(xhr, status, error) {
                 console.error(error);
+                alert("获取选课信息时发生错误，请稍后再试。");
             }
-
         });
     }
 
@@ -76,14 +79,19 @@
         $.ajax({
             url: 'http://localhost:8080/api/v1/drop',
             type: 'DELETE',
-            data: JSON.stringify(courseInf), // 将数据转换为JSON格式发送
-            contentType: 'application/json', // 设置contentType，因为发送的是json数据
+            data: JSON.stringify(courseInf),
+            contentType: 'application/json',
             success: function(response) {
-                findPickedCourse();
+                if (response.success) {
+                    alert(response.message || "退课成功");
+                    findPickedCourse(); // 成功后刷新选课列表
+                } else {
+                    alert(response.message);
+                }
             },
             error: function(jqXHR, textStatus, errorThrown) {
                 console.error("Error:", textStatus, errorThrown);
-                alert("提交过程中发生未知错误，请重试。");
+                alert("退课过程中发生未知错误，请重试。");
             }
         });
     }

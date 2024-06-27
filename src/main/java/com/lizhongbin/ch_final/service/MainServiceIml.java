@@ -122,12 +122,20 @@ public class MainServiceIml implements MainService {
     }
 
     @Override
-    public void deleteStudentCourses(StudentCourses studentCourses) {
-        mainMapper.deleteStudentCourseByStuIdAndCourseId(studentCourses);
+    public boolean deleteStudentCourses(StudentCourses studentCourses) {
+        if(mainMapper.deleteStudentCourseByStuIdAndCourseId(studentCourses)!=0)
+            return true;
+        else
+            return false;
     }
 
     @Override
     public int countPickedNumOfCourse(int courseId) {
         return mainMapper.countPickedNumOfCourse(courseId);
+    }
+
+    @Override
+    public List<Course> getUnPickedCoursesByStudentId(int studentId) {
+        return mainMapper.selectUnPickedCourse(studentId);
     }
 }

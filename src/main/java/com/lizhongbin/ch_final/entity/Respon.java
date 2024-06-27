@@ -1,11 +1,30 @@
 package com.lizhongbin.ch_final.entity;
 
+import com.lizhongbin.ch_final.model.Course;
+
+import java.util.List;
+
 public class Respon {
     private Boolean success;
     private String message;
     private int userId;
     private int stuId;
     private String type;
+    private List<Course> courses;
+
+    public List<Course> getCourses() {
+        return courses;
+    }
+
+    public void setCourses(List<Course> courses) {
+        this.courses = courses;
+    }
+
+    public Respon(Boolean success, String message, List<Course> courses) {
+        this.success = success;
+        this.message = message;
+        this.courses = courses;
+    }
 
     public int getStuId() {
         return stuId;
