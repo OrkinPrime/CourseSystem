@@ -34,7 +34,6 @@ public interface MainService {
     List<Course> getAllCourses();
     int addCourse(Course course);
     int deleteCourse(int id);
-    int updateCourse(Course course);
 
     //对学生班级表
     //选课
@@ -42,4 +41,7 @@ public interface MainService {
     boolean deleteStudentCourses(StudentCourses studentCourses);
     int countPickedNumOfCourse(int courseId);
     List<Course> getUnPickedCoursesByStudentId(int studentId);
+
+    Course getCoursesById(int courseId);
+    int updateCourse(Course course);
 }

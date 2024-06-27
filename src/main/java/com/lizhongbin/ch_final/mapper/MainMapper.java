@@ -79,13 +79,17 @@ public interface MainMapper {
     //增
     @Insert("insert into courses(courseName,description,capacity) VALUES (#{courseName},#{description},#{capacity})")
     int insertCourse(Course course);
+
+    @Select("select * from courses where id = #{courseId}")
+    Course selectCourseById(int courseId);
+
     //删
-    @Delete("delete from course where course.id=#{courseId}")
+    @Delete("delete from courses where course.id=#{courseId}")
     int deleteCourseById(int courseId);
     //改
     @Update({
             "<script>",
-            "update course",
+            "update courses",
             "<set>",
             "<if test = 'courseName!=null'> courseName=#{courseName},</if>",
             "<if test = 'description!=null'> description=#{description},</if>",

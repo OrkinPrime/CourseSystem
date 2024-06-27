@@ -130,4 +130,37 @@ public class MainController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Respon(false, "退课失败，可能是课程未选或其他原因"));
         }
     }
+
+    @PostMapping("api/v1/admin/courses")
+    public ResponseEntity<Respon> admin(@RequestBody Course course) {
+        if (mainService.addCourse(course)!=0)
+            return ResponseEntity.status(HttpStatus.CREATED).body(new Respon(true,"添加课程信息成功",course));
+        else
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Respon(false, "添加课程信息失败"));
+    }
+    @GetMapping("api/v1/admin/courses/{courseId}")
+    public ResponseEntity<Respon> admin(@PathVariable int courseId) {
+        if(mainService.getCoursesById(courseId)!=null)
+            return ResponseEntity.ok(new Respon(true,"获取课程信息成功",mainService.getCoursesById(courseId)));
+        else
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Respon(false,"获取课程信息失败"));
+    }
+    @PatchMapping("api/v1/admin/courses/{courseId}") // 假设按照课程ID更新，路径中添加了{courseId}
+    public ResponseEntity<Respon> updateAdminCourse(@PathVariable int courseId, @RequestBody Course course) {
+
+        Course pkg = new Course(courseId,course.getCourseName(), course.getDescription(), course.getCapacity());
+        // 假设mainService.updateCourse接受课程ID和更新的信息
+        boolean updateSuccess = mainService.updateCourse(pkg) != 0;
+
+        if (updateSuccess) {
+            // 如果更新成功，返回200 OK状态码和成功的响应体
+            Respon successResponse = new Respon(true,"课程更新成功");
+            return ResponseEntity.ok(successResponse);
+        } else {
+            // 如果更新失败，返回400 Bad Request或404 Not Found等适当状态码，以及错误信息
+            Respon errorResponse = new Respon(false,"课程更新失败");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+        }
+    }
+
 }

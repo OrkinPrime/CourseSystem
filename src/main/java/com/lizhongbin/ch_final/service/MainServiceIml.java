@@ -112,11 +112,6 @@ public class MainServiceIml implements MainService {
     }
 
     @Override
-    public int updateCourse(Course course) {
-        return 0;
-    }
-
-    @Override
     public int addStudentCourses(StudentCourses studentCourses) {
         return mainMapper.insertStudentCourses(studentCourses);
     }
@@ -137,5 +132,15 @@ public class MainServiceIml implements MainService {
     @Override
     public List<Course> getUnPickedCoursesByStudentId(int studentId) {
         return mainMapper.selectUnPickedCourse(studentId);
+    }
+
+    @Override
+    public Course getCoursesById(int courseId) {
+        return mainMapper.selectCourseById(courseId);
+    }
+
+    @Override
+    public int updateCourse(Course course) {
+        return mainMapper.updateCourse(course);
     }
 }

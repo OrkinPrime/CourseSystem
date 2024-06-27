@@ -11,6 +11,21 @@ public class Respon {
     private int stuId;
     private String type;
     private List<Course> courses;
+    private Course course;
+
+    public Respon(Boolean success, String message, Course course) {
+        this.success = success;
+        this.message = message;
+        this.course = course;
+    }
+
+    public Course getCourse() {
+        return course;
+    }
+
+    public void setCourse(Course course) {
+        this.course = course;
+    }
 
     public List<Course> getCourses() {
         return courses;

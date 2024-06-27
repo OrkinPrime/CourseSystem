@@ -12,7 +12,6 @@
         <ul class="header-button-list">
             <li><a id="findAllCourse" href="#" class="button">主页面</a></li>
             <li><a id="addCourse" href="#" class="button">增加课程</a></li>
-            <li><a id="dropCourse" href="#" class="button">批量删除课程</a></li>
             <li><a id="exitAccount" href="#" class="button">退出账户</a></li>
         </ul>
     </div>
@@ -38,8 +37,74 @@
 <footer>
 
 </footer>
+<div id="addModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeAddModal()">&times;</span>
+        <h2>输入课程信息</h2>
+        <section>
+            <form class="formJ" id="addForm" accept-charset="UTF-8">
+
+                <label>课程名:
+                    <input type="text" name="courseName" value=''>
+                </label>
+                <label>描述:
+                    <input type="text" name="description" value='描述。。。'>
+                </label>
+                <label>课容量:
+                    <input type="text" name="capacity" value='50'>
+                </label>
+                <input type="reset" value="重置" class="btn">
+                <input type="submit" value="插入" class="btn" onclick="closeAddModal()">
+            </form>
+        </section>
+    </div>
+</div>
+<div id="changeModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeChangeModal()">&times;</span>
+        <h2>修改课程信息</h2>
+        <section>
+            <form class="formJ" id="changeForm" accept-charset="UTF-8">
+
+                <label>课程名:
+                    <input type="text" name="courseName" value=''>
+                </label>
+                <label>描述:
+                    <input type="text" name="description" value=''>
+                </label>
+                <label>课容量:
+                    <input type="text" name="capacity" value=''>
+                </label>
+
+                <input type="reset" value="重置" class="btn">
+                <input type="submit" value="完成修改" class="btn" onclick="closeChangeModal()">
+            </form>
+        </section>
+    </div>
+</div>
 </body>
 <script>
+
+    var originalData = {};
+
+    function openAddModal() {
+        $('#addForm')[0].reset();
+        $('#addModal').show();
+    }
+
+    function closeAddModal() {
+        $('#addModal').hide();
+    }
+
+    function openChangeModal() {
+        $('#changeForm')[0].reset();
+        $('#changeModal').show();
+    }
+
+    function closeChangeModal() {
+        $('#changeModal').hide();
+    }
+
     function findAllCourse() {
         $.ajax({
             url: 'http://localhost:8080/api/v1/test/course',
@@ -61,37 +126,141 @@
                 '<td>' + item['description'] + '</td>' +
                 '<td>' + item['capacity'] + '</td>' +
                 '<td>' +
-                '<button class="changeById" onclick="changeById(' + item['id'] + ')">修改</button>' +
-                '<button class="deleteById" onclick="deleteById(' + item['id'] + ')">删除</button>' +
+                '<button id="changeById"  data-id="' + item['id'] + '" >修改</button>' +
+                '<button id="deleteById"  data-id="' + item['id'] + '" >删除</button>' +
                 '</td>';
             ;
             htmlContent += '</tr>';
         });
         $('#main-shower').html(htmlContent);
     }
+
+    $(document).on('click', '#changeById', function() {
+            var courseId = $(this).data('id'); // 获取按钮对应课程的ID
+            console.log("test");
+            console.log(courseId);
+            $.ajax({
+                    url: `http://localhost:8080/api/v1/admin/courses/${courseId}`,
+                    type: "get",
+                    success: function (res) {
+
+                        originalData = {
+                            id:res.course.id,
+                            courseName: res.course.courseName,
+                            description: res.course.description,
+                            capacity: res.course.capacity
+                        };
+
+                        $('#changeForm input[name="courseName"]').val(res.course.courseName);
+                        $('#changeForm input[name="description"]').val(res.course.description);
+                        $('#changeForm input[name="capacity"]').val(res.course.capacity);
+
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(error);
+                    }
+                }
+            );
+            openChangeModal();
+        });
+
     $(document).ready(function () {
         userId = localStorage.getItem('userId');
-        if (userId!=null){
+        if (userId != null) {
             findAllCourse();
-            $('#addCourse').click(function (e){
-                window.location.href = "/ch_final/src/main/resources/static/addCourse.html";
+            $('#addCourse').click(function (e) {
+                openAddModal();
             });
-            $('#dropCourse').click(function (e){
-                window.location.href = "/ch_final/src/main/resources/static/dropCourse.html";
+            $('#findAllCourse').click(function (e) {
+                window.location.href = "/ch_final/src/main/resources/static/admin.html";
             });
-            $('#findAllCourse').click(function (e){
-                window.location.href = "/ch_final/src/main/resources/static/main.html";
-            });
-            $('#exitAccount').click(function (e){
+            $('#exitAccount').click(function (e) {
                 localStorage.clear();
                 window.location.href = "/ch_final/src/main/resources/static/index.html";
             });
-        }else{
-            alert("学生信息验证失效，请重新登录或者联系管理员")
+            $('#addForm').submit(function (e) {
+                e.preventDefault();
+
+                if ($('#addForm input[name="stuName"]').val() === '' || $('#addForm input[name="stuNo"]').val() === '' || $('#addForm select[name="classId"]').val() === '' || $('#addForm input[name="age"]').val() === '' || $('#addForm input[name="gpa"]').val() === '') {
+                    alert("请完整填写学生信息！");
+                } else {
+                    var formData = {
+                        courseName: $('#addForm input[name="courseName"]').val(),
+                        description: $('#addForm input[name="description"]').val(),
+                        capacity: $('#addForm input[name="capacity"]').val()
+                    }
+
+                    $.ajax({
+                        url: 'http://localhost:8080/api/v1/admin/courses',
+                        type: 'post',
+                        data: JSON.stringify(formData),
+                        contentType: 'application/json',
+                        success: function () {
+                            findAllCourse();
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("Error: " + error);
+                        }
+                    });
+                }
+            });
+
+            $('#changeForm').submit(function (e) {
+                e.preventDefault();
+
+                if ($('#changeForm input[name="courseName"]').val() === '' || $('#changeForm input[name="description"]').val() === '' || $('#changeForm input[name="capacity"]').val() === '') {
+                    alert("请完整填写课程信息！");
+                } else {
+                    var formData = {
+                        id:originalData.id,
+                        courseName: $('#changeForm input[name="courseName"]').val(),
+                        description: $('#changeForm input[name="description"]').val(),
+                        capacity: $('#changeForm input[name="capacity"]').val()
+                    };
+
+                    var patchData = {}; // 用于PATCH请求的键值对
+
+                    // 比较原始数据和表单数据
+                    for (var key in originalData) {
+                        if (originalData[key] != formData[key]) {
+                            patchData[key] = formData[key]; // 如果不同，添加到patchData中
+                        }
+                    }
+                    // 如果patchData为空，说明没有需要更新的数据
+                    console.log(patchData);
+                    if (Object.keys(patchData).length === 0) {
+                        alert("没有需要更新的数据！");
+                    } else {
+                        // 如果需要更新，这里可以发送PATCH请求
+                        $.ajax({
+                            url: `http://localhost:8080/api/v1/admin/courses/${originalData.id}`, // 使用encodeURIComponent防止特殊字符问题
+                            method: 'PATCH',
+                            data: JSON.stringify(patchData),
+                            contentType: 'application/json',
+                            success: function(response) {
+                                // 假设后端现在返回了更新后的课程信息或其他状态信息
+                                console.log('课程更新成功，服务器响应：', response);
+                                findAllCourse(); // 重新获取课程列表
+                            },
+                            error: function(xhr, status, error) {
+                                // 根据HTTP状态码细化错误处理
+                                if (xhr.status === 400) {
+                                    console.error('课程更新失败，请求数据可能有误：', error);
+                                } else if (xhr.status === 404) {
+                                    console.error('课程未找到：', error);
+                                } else {
+                                    console.error('更新课程时发生错误：', error);
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+        } else {
+            alert("用户信息验证失效，请重新登录或者联系管理员")
             localStorage.clear();
             window.location.href = "/ch_final/src/main/resources/static/index.html";
         }
-
     });
 </script>
 </html>
