@@ -19,24 +19,11 @@ public class MainController {
         this.mainService = mainService;
     }
 
-    @GetMapping("api/v1/test/student")
-    public List<Student> testStudent() {
-        return mainService.getAllStudents();
-    }
-
-    @GetMapping("api/v1/test/course")
-    public List<Course> testCourse() {
+    @GetMapping("api/v1/courses")
+    public List<Course> getAllCourse() {
         return mainService.getAllCourses();
     }
 
-    @GetMapping("api/v1/test/account")
-    public List<Account> testAccount() {
-        return mainService.getAllAccounts();
-    }
-
-    //接收前端传来的账户信息，已经保证密码格式
-    //先验证账户信息中登录名是否重复，如果重复，返回给前端的消息里包含error，和message提示登录名重复
-    //如果不重复，则添加账户信息到数据库，返回消息包含success，和message提示注册成功，并且跳转到登录界面
     @PostMapping("api/v1/signin")
     public ResponseEntity<Respon> signIn(@RequestBody Account_Student accountStudent) {
         Account account = new Account(accountStudent.getLoginName(), accountStudent.getPassword(), accountStudent.getAccountType());
@@ -66,28 +53,27 @@ public class MainController {
         if (mainService.verifyAccount(account)) {
             account.setId(mainService.getAccountByName(account.getLoginName()).getId());
             String type = String.valueOf(mainService.getAccountByName(account.getLoginName()).getAccountType());
-            if (type == "STUDENT") {
+            if (type.equals("STUDENT") ) {
                 int stuId = mainService.getStudentByAccountId(account.getId()).getId();
                 return ResponseEntity.ok(new Respon(true, "登录成功", account.getId(), stuId, "STUDENT"));
-            } else if (type == "ADMIN") {
+            } else if (type.equals("ADMIN") ){
                 return ResponseEntity.ok(new Respon(true, "管理员登录成功", account.getId(), "ADMIN"));
             }else{
                 return ResponseEntity.ok(new Respon(true, "教师登录成功", account.getId(), "TEACHER"));
             }
         } else {
-            // 改为使用401 Unauthorized，前端可以在error回调中处理
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(new Respon(false, "登录失败，密码或登录名错误"));
         }
     }
 
-    @GetMapping("api/v1/pick/{stuId}")
+    @GetMapping("api/v1/student/pick/{stuId}")
     public ResponseEntity<Respon> coursesCanBePick(@PathVariable int stuId) {
         List<Course> courses = mainService.getUnPickedCoursesByStudentId(stuId);
         return ResponseEntity.ok(new Respon(true, "查询成功", courses));
     }
 
-    @PostMapping("api/v1/pick")
+    @PostMapping("api/v1/student/pick")
     public ResponseEntity<Respon> pick(@RequestBody CourseInfo courseInfo) {
         int stuId = courseInfo.getStuId();
         int[] courseId = courseInfo.getCourseId();
@@ -107,13 +93,13 @@ public class MainController {
         }
     }
 
-    @GetMapping("api/v1/picked/{stuId}")
+    @GetMapping("api/v1/student/picked/{stuId}")
     public ResponseEntity<Respon> picked(@PathVariable int stuId) {
         List<Course> courses = mainService.getCoursesByStuId(stuId);
         return ResponseEntity.ok(new Respon(true, "查询成功", courses));
     }
 
-    @DeleteMapping("api/v1/drop")
+    @DeleteMapping("api/v1/student/picked")
     public ResponseEntity<Respon> drop(@RequestBody CourseInfo courseInfo) {
         int stuId = courseInfo.getStuId();
         int[] courseId = courseInfo.getCourseId();
@@ -149,15 +135,12 @@ public class MainController {
     public ResponseEntity<Respon> updateAdminCourse(@PathVariable int courseId, @RequestBody Course course) {
 
         Course pkg = new Course(courseId,course.getCourseName(), course.getDescription(), course.getCapacity());
-        // 假设mainService.updateCourse接受课程ID和更新的信息
         boolean updateSuccess = mainService.updateCourse(pkg) != 0;
 
         if (updateSuccess) {
-            // 如果更新成功，返回200 OK状态码和成功的响应体
             Respon successResponse = new Respon(true,"课程更新成功");
             return ResponseEntity.ok(successResponse);
         } else {
-            // 如果更新失败，返回400 Bad Request或404 Not Found等适当状态码，以及错误信息
             Respon errorResponse = new Respon(false,"课程更新失败");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
         }

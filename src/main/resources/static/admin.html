@@ -39,47 +39,53 @@
 </footer>
 <div id="addModal" class="modal">
     <div class="modal-content">
-        <span class="close" onclick="closeAddModal()">&times;</span>
-        <h2>输入课程信息</h2>
-        <section>
-            <form class="formJ" id="addForm" accept-charset="UTF-8">
+        <div class="md">
+            <span class="close" onclick="closeAddModal()">&times;</span>
+            <h2>输入课程信息</h2>
+            <div class="cont">
+                <form class="formJ" id="addForm" accept-charset="UTF-8">
 
-                <label>课程名:
-                    <input type="text" name="courseName" value=''>
-                </label>
-                <label>描述:
-                    <input type="text" name="description" value='描述。。。'>
-                </label>
-                <label>课容量:
-                    <input type="text" name="capacity" value='50'>
-                </label>
-                <input type="reset" value="重置" class="btn">
-                <input type="submit" value="插入" class="btn" onclick="closeAddModal()">
-            </form>
-        </section>
+                    <label>课程名:
+                        <input type="text" name="courseName" value=''>
+                    </label>
+                    <label>描述:
+                        <input type="text" name="description" value='描述。。。'>
+                    </label>
+                    <label>课容量:
+                        <input type="text" name="capacity" value='50'>
+                    </label>
+                    <input type="reset" value="重置" class="btn">
+                    <input type="submit" value="插入" class="btn" onclick="closeAddModal()">
+                </form>
+            </div>
+        </div>
     </div>
 </div>
 <div id="changeModal" class="modal">
     <div class="modal-content">
-        <span class="close" onclick="closeChangeModal()">&times;</span>
-        <h2>修改课程信息</h2>
-        <section>
-            <form class="formJ" id="changeForm" accept-charset="UTF-8">
+        <div class="md">
+            <div class="tt">
+                <span class="close" onclick="closeChangeModal()">&times;</span>
+                <h2>修改课程信息</h2>
+            </div>
+            <div class="cont">
+                <form class="formJ" id="changeForm" accept-charset="UTF-8">
 
-                <label>课程名:
-                    <input type="text" name="courseName" value=''>
-                </label>
-                <label>描述:
-                    <input type="text" name="description" value=''>
-                </label>
-                <label>课容量:
-                    <input type="text" name="capacity" value=''>
-                </label>
+                    <label>课程名:
+                        <input type="text" name="courseName" value=''>
+                    </label>
+                    <label>描述:
+                        <input type="text" name="description" value=''>
+                    </label>
+                    <label>课容量:
+                        <input type="text" name="capacity" value=''>
+                    </label>
 
-                <input type="reset" value="重置" class="btn">
-                <input type="submit" value="完成修改" class="btn" onclick="closeChangeModal()">
-            </form>
-        </section>
+                    <input type="reset" value="重置" class="btn">
+                    <input type="submit" value="完成修改" class="btn" onclick="closeChangeModal()">
+                </form>
+            </div>
+        </div>
     </div>
 </div>
 </body>
@@ -107,7 +113,7 @@
 
     function findAllCourse() {
         $.ajax({
-            url: 'http://localhost:8080/api/v1/test/course',
+            url: 'http://localhost:8080/api/v1/courses',
             type: 'get',
             dataType: 'json',
             success: function showData(res) {
@@ -163,32 +169,37 @@
         });
 
     $(document).on('click',"#deleteById",function (){
-        var courseId = $(this).data('id'); // 获取按钮对应课程的ID
-        $.ajax({
-                url: `http://localhost:8080/api/v1/admin/courses/${courseId}`,
-                method:"DELETE",
-                success: function (res) {
-                    console.log(res.message);
-                    findAllCourse();
-                },
-                error: function (xhr, status, error) {
-                    console.error(error);
+        if(confirm("是否删除？")){
+            var courseId = $(this).data('id'); // 获取按钮对应课程的ID
+            $.ajax({
+                    url: `http://localhost:8080/api/v1/admin/courses/${courseId}`,
+                    method:"DELETE",
+                    success: function (res) {
+                        console.log(res.message);
+                        findAllCourse();
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(error);
+                    }
                 }
-            }
-        );
+            );
+        }else{
+            console.log("取消删除");
+        }
+
     });
 
     $(document).ready(function () {
         userId = localStorage.getItem('userId');
         if (userId != null) {
             findAllCourse();
-            $('#addCourse').click(function (e) {
+            $('#addCourse').click(function () {
                 openAddModal();
             });
-            $('#findAllCourse').click(function (e) {
+            $('#findAllCourse').click(function () {
                 window.location.href = "/ch_final/src/main/resources/static/admin.html";
             });
-            $('#exitAccount').click(function (e) {
+            $('#exitAccount').click(function () {
                 localStorage.clear();
                 window.location.href = "/ch_final/src/main/resources/static/index.html";
             });

@@ -59,13 +59,12 @@ public class MainServiceIml implements MainService {
 
     @Override
     public boolean isAccountNameExist(String accountName) {
-        if (mainMapper.isAccountNameExist(accountName)!=0){
+        if (mainMapper.isAccountNameExist(accountName)!=0)
             return true;
             //如果存在
-        }else {
+        else
             return false;
             //如果不存在
-        }
     }
 
     @Override

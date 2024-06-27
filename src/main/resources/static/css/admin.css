@@ -29,7 +29,20 @@ footer{
     cursor: pointer;
     padding: inherit;
 }
-
+.md{
+    border-radius: 10px;
+    padding: 15px;
+    margin: 20px auto;
+    height: 60%;
+    width: 80%;
+    background: #a4ccc1;
+}
+.cont{
+    border-radius: 8px;
+    margin: auto;
+    padding: 20px;
+    background: #c7dce0;
+}
 /* CSS样式 */
 #list{
     padding: 15px;
@@ -77,12 +90,14 @@ footer{
 
 .modal-content {
     border-radius: 8px;
-    background-color: #fefefe;
+    background-color: #bad5da;
     margin: 15% auto;
-    padding: 10px 10px 30px;
+    /*padding: 10px 10px 30px;*/
     border: 1px solid #888;
     width: 50%;
     max-width: 500px;
+    align-items: center;
+    justify-content: center;
 }
 
 .close {
@@ -90,6 +105,7 @@ footer{
     float: right;
     font-size: 28px;
     font-weight: bold;
+    margin: 8px;
 }
 
 .close:hover,

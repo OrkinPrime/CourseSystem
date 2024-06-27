@@ -1,34 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>登录界面</title>
+<meta charset="UTF-8">
+<title>登录界面</title>
 </head>
-<style>@import url(css/login.css);</style>
+
+<style>
+@import url(css/login.css);
+</style>
 <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
 <body>
+<header id="hd">
+  <h1 id="title">学生选课系统</h1>
+</header>
 <div id="wp">
-    <header id="hd"><h1 id="title">学生选课系统</h1></header>
-    <div id="bd">
-        <div id="main">
-            <form id="loginForm">
-                <section id="loginForm-input">
-                    <label for="loginName">账号：
-                        <input id="loginName" type="text" name="loginName">
-                    </label>
-                    <label for="password">密码：
-                        <input id="password" type="password" name="password">
-                    </label>
-                </section>
-                <section id="loginForm-button">
-                    <input id="loginSub" class="loginButton" type="submit" value="登录">
-                    <input id="signinSub" class="loginButton" type="button" value="注册">
-                </section>
-            </form>
-        </div>
+  <div id="bd">
+    <h2>登录</h2>
+    <div id="main">
+      <form id="loginForm">
+        <section id="loginForm-input">
+          <label for="loginName">账号：
+            <input id="loginName" type="text" name="loginName">
+          </label>
+          <label for="password">密码：
+            <input id="password" type="password" name="password">
+          </label>
+        </section>
+        <section id="loginForm-button">
+          <input id="loginSub" class="loginButton" type="submit" value="登录">
+          <input id="signinSub" class="loginButton" type="button" value="注册">
+        </section>
+      </form>
     </div>
-    <footer id="ft"></footer>
+  </div>
 </div>
+</body>
 <script>
     $(document).ready(function () {
         $('#loginForm').submit(function (e) {
@@ -74,5 +80,4 @@
     });
 
 </script>
-</body>
 </html>

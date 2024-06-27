@@ -7,48 +7,58 @@
     <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
 </head>
 <body>
+<header>
+<h1>注册学生账号</h1>
+</header>
 <div id="wp">
     <div id="bd">
         <div id="main">
             <form id="signInForm">
-                <section id="signInForm-input">
-                    <ul>
-                        <li>
-                            <label>
-                                登录名:
-                                <input id="loginName" name="loginName" type="text">
-                            </label>
-                        </li>
-                        <li>
-                            <label>
-                                密码:
-                                <input id="password" name="password" type="password">
-                            </label>
-                        </li>
-                        <li>
-                            <label>
-                                确认密码:
-                                <input id="confirmPassword" name="confirm" type="password">
-                            </label>
-                        </li>
-                    </ul>
-                    <p id="message" style="color:#ff0000;"></p>
-                    <ul>
-                        学生信息
-                        <li>
-                            <label>
-                                学号：
-                                <input id="stuNo" name="stuNo" type="text">
-                            </label>
-                        </li>
-                        <li>
-                            <label>
-                                姓名：
-                                <input id="stuName" name="stuName" type="text">
-                            </label>
-                        </li>
-                    </ul>
-                </section>
+                <div id="signInForm-input">
+                    <div class="log">
+                        <ul>
+                            登录信息
+                            <li>
+                                <label>
+                                    登录名：
+                                    <input id="loginName" name="loginName" type="text">
+                                </label>
+                            </li>
+                            <li>
+                                <label>
+                                    密码：
+                                    <input id="password" name="password" type="password">
+                                </label>
+                            </li>
+                            <li>
+                                <label>
+                                    确认密码：
+                                    <input id="confirmPassword" name="confirm" type="password">
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="mes">
+                        <p id="message" style="color:#ff0000;"></p>
+                    </div>
+                    <div class="stu">
+                        <ul>
+                            学生信息
+                            <li>
+                                <label>
+                                    学号：
+                                    <input id="stuNo" name="stuNo" type="text">
+                                </label>
+                            </li>
+                            <li>
+                                <label>
+                                    姓名：
+                                    <input id="stuName" name="stuName" type="text">
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
                 <section id="signIn-button">
                     <input type="submit" id="submitBtn" class="signInButton" disabled value="注册">
                     <input type="reset" id="resetBtn" class="signInButton" value="重置">
